@@ -1,0 +1,53 @@
+[33mcommit a2c4bc1efb82bb121a20f1c02b067011ea0ea0dc[m
+Author: soufiane <soufianelaaroussi03@gmail.com>
+Date:   Wed Jan 21 15:33:34 2026 +0100
+
+    fix: improve CI workflow - use npm ci, add go mod tidy, enable CGO
+
+[1mdiff --git a/.github/workflows/ci-full.yml b/.github/workflows/ci-full.yml[m
+[1mindex 8217c1b..a10c365 100644[m
+[1m--- a/.github/workflows/ci-full.yml[m
+[1m+++ b/.github/workflows/ci-full.yml[m
+[36m@@ -27,7 +27,7 @@[m [mjobs:[m
+           cache-dependency-path: api-node/package-lock.json[m
+       [m
+       - name: Install dependencies[m
+[31m-        run: npm install[m
+[32m+[m[32m        run: npm ci[m
+       [m
+       - name: Run tests with coverage[m
+         env:[m
+[36m@@ -61,7 +61,7 @@[m [mjobs:[m
+           cache-dependency-path: api-node/package-lock.json[m
+       [m
+       - name: Install dependencies[m
+[31m-        run: npm install[m
+[32m+[m[32m        run: npm ci[m
+       [m
+       - name: Run ESLint[m
+         run: npm run lint 2>/dev/null || echo " No lint script configured"[m
+[36m@@ -85,7 +85,7 @@[m [mjobs:[m
+           cache-dependency-path: client-react/package-lock.json[m
+       [m
+       - name: Install dependencies[m
+[31m-        run: npm install[m
+[32m+[m[32m        run: npm ci[m
+       [m
+       - name: Build React app[m
+         run: npm run build[m
+[36m@@ -115,9 +115,15 @@[m [mjobs:[m
+           cache: true[m
+           cache-dependency-path: api-golang/go.sum[m
+       [m
+[32m+[m[32m      - name: Tidy Go modules[m
+[32m+[m[32m        run: go mod tidy[m
+[32m+[m[41m      [m
+       - name: Download Go dependencies[m
+         run: go mod download[m
+       [m
+[32m+[m[32m      - name: Enable CGO for SQLite[m
+[32m+[m[32m        run: echo "CGO_ENABLED=1" >> $GITHUB_ENV[m
+[32m+[m[41m      [m
+       - name: Build Go binary[m
+         run: go build -v -o api-golang ./...[m
+       [m
